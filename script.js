@@ -1,7 +1,5 @@
-// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
-// Initialize Lenis for smooth scrolling
 const lenis = new Lenis({
     duration: 1.2,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -20,18 +18,14 @@ function raf(time) {
 }
 requestAnimationFrame(raf);
 
-// Connecting Lenis with GSAP ScrollTrigger
 lenis.on('scroll', ScrollTrigger.update);
 
 gsap.ticker.add((time) => {
-  lenis.raf(time * 1000);
+    lenis.raf(time * 1000);
 });
 
 gsap.ticker.lagSmoothing(0, 0);
 
-// ------------------------------------
-// Loader Animation
-// ------------------------------------
 const tlLoader = gsap.timeline();
 tlLoader.to('.loader-text', {
     y: 0,
@@ -40,54 +34,50 @@ tlLoader.to('.loader-text', {
     ease: 'power4.out',
     delay: 0.2
 })
-.to('.loader-text', {
-    y: '-100%',
-    opacity: 0,
-    duration: 0.8,
-    ease: 'power4.in',
-    delay: 0.5
-})
-.to('.loader', {
-    y: '-100%',
-    duration: 1,
-    ease: 'expo.inOut'
-})
-.to('.hero .word', {
-    y: '0%',
-    duration: 1.2,
-    stagger: 0.1,
-    ease: 'power4.out'
-}, "-=0.5")
-.from('.hero-subtitle', {
-    opacity: 0,
-    y: 20,
-    duration: 1,
-    ease: 'power3.out'
-}, "-=0.8")
-.from('.hero .btn', {
-    opacity: 0,
-    y: 20,
-    duration: 1,
-    ease: 'power3.out'
-}, "-=0.6")
-.from('.hero-image-container', {
-    opacity: 0,
-    scale: 0.9,
-    y: 50,
-    duration: 2,
-    ease: 'power4.out'
-}, "-=1.2")
-.from('nav', {
-    y: -50,
-    opacity: 0,
-    duration: 1,
-    ease: 'power3.out'
-}, "-=1");
+    .to('.loader-text', {
+        y: '-100%',
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power4.in',
+        delay: 0.5
+    })
+    .to('.loader', {
+        y: '-100%',
+        duration: 1,
+        ease: 'expo.inOut'
+    })
+    .to('.hero .word', {
+        y: '0%',
+        duration: 1.2,
+        stagger: 0.1,
+        ease: 'power4.out'
+    }, "-=0.5")
+    .from('.hero-subtitle', {
+        opacity: 0,
+        y: 20,
+        duration: 1,
+        ease: 'power3.out'
+    }, "-=0.8")
+    .from('.hero .btn', {
+        opacity: 0,
+        y: 20,
+        duration: 1,
+        ease: 'power3.out'
+    }, "-=0.6")
+    .from('.hero-image-container', {
+        opacity: 0,
+        scale: 0.9,
+        y: 50,
+        duration: 2,
+        ease: 'power4.out'
+    }, "-=1.2")
+    .from('nav', {
+        y: -50,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+    }, "-=1");
 
-
-// ------------------------------------
-// Custom Cursor
-// ------------------------------------
 const cursor = document.querySelector('.cursor');
 const cursorFollower = document.querySelector('.cursor-follower');
 
@@ -95,7 +85,6 @@ let mouseX = 0, mouseY = 0;
 let cursorX = 0, cursorY = 0;
 let followerX = 0, followerY = 0;
 
-// Hide cursor initially to prevent jumping from corner
 gsap.set(cursor, { opacity: 0 });
 gsap.set(cursorFollower, { opacity: 0 });
 
@@ -110,46 +99,39 @@ document.addEventListener('mousemove', (e) => {
     mouseY = e.clientY;
 });
 
-// Update cursor position smoothly
 gsap.ticker.add(() => {
-    // Cursor moves instantly
     cursorX += (mouseX - cursorX) * 0.5;
     cursorY += (mouseY - cursorY) * 0.5;
-    
-    // Follower has lag
+
     followerX += (mouseX - followerX) * 0.1;
     followerY += (mouseY - followerY) * 0.1;
-    
+
     gsap.set(cursor, { x: cursorX, y: cursorY });
     gsap.set(cursorFollower, { x: followerX, y: followerY });
 });
 
-// ------------------------------------
-// Magnetic Buttons & Hover Interactions
-// ------------------------------------
 const magneticEls = document.querySelectorAll('.magnetic');
 
 magneticEls.forEach((el) => {
     el.addEventListener('mouseenter', () => {
         cursorFollower.classList.add('active');
-        gsap.to(cursor, {scale: 0, duration: 0.3}); // hide tiny dot
+        gsap.to(cursor, { scale: 0, duration: 0.3 });
     });
-    
+
     el.addEventListener('mouseleave', () => {
         cursorFollower.classList.remove('active');
-        gsap.to(cursor, {scale: 1, duration: 0.3});
+        gsap.to(cursor, { scale: 1, duration: 0.3 });
         gsap.to(el, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.3)' });
     });
-    
+
     el.addEventListener('mousemove', (e) => {
-        // Magnetic effect
         const rect = el.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
-        
+
         const distX = e.clientX - centerX;
         const distY = e.clientY - centerY;
-        
+
         gsap.to(el, {
             x: distX * 0.3,
             y: distY * 0.3,
@@ -159,7 +141,6 @@ magneticEls.forEach((el) => {
     });
 });
 
-// Magnetic effect on Project Cards just for fun (slight move)
 const magneticCards = document.querySelectorAll('.magnetic-card');
 magneticCards.forEach(card => {
     card.addEventListener('mouseenter', () => cursorFollower.classList.add('active'));
@@ -173,8 +154,7 @@ magneticCards.forEach(card => {
         const centerY = rect.top + rect.height / 2;
         const distX = e.clientX - centerX;
         const distY = e.clientY - centerY;
-        
-        // Very subtle magnetic effect for large cards
+
         gsap.to(card, {
             x: distX * 0.05,
             y: distY * 0.05,
@@ -184,9 +164,6 @@ magneticCards.forEach(card => {
     });
 });
 
-// ------------------------------------
-// Clean Hero Image Scroll Vanish
-// ------------------------------------
 gsap.to('.hero-image-wrapper', {
     scrollTrigger: {
         trigger: '.hero',
@@ -200,9 +177,6 @@ gsap.to('.hero-image-wrapper', {
     ease: 'none'
 });
 
-// ------------------------------------
-// Subtle Premium Floating Effect
-// ------------------------------------
 gsap.to('.hero-image-container', {
     y: 12,
     duration: 4,
@@ -211,9 +185,6 @@ gsap.to('.hero-image-container', {
     ease: 'sine.inOut'
 });
 
-// ------------------------------------
-// Marquee Animation
-// ------------------------------------
 gsap.to('.marquee-inner', {
     xPercent: -50,
     ease: 'none',
@@ -221,9 +192,6 @@ gsap.to('.marquee-inner', {
     repeat: -1
 });
 
-// ------------------------------------
-// Scroll Text Scrub Reveal: About Section
-// ------------------------------------
 gsap.to('.scrub-word', {
     scrollTrigger: {
         trigger: '.about',
@@ -237,12 +205,8 @@ gsap.to('.scrub-word', {
     ease: 'none'
 });
 
-// ------------------------------------
-// Vertical Stacking Depth & Blur Effect
-// ------------------------------------
 const cards = gsap.utils.toArray('.project-card');
 
-// Fade out the 'Selected Works' header so it doesn't show behind cards
 gsap.to('.work-header', {
     scrollTrigger: {
         trigger: cards[0],
@@ -256,11 +220,9 @@ gsap.to('.work-header', {
 });
 
 cards.forEach((card, i) => {
-    if (i !== cards.length - 1) { // Not the last one
+    if (i !== cards.length - 1) {
         gsap.to(card, {
-            scale: 0.9,
-            // Using brightness instead of opacity prevents seeing layers beneath it!
-            filter: 'brightness(0.3) blur(10px)',
+            filter: 'brightness(0.2) blur(15px)',
             ease: 'none',
             scrollTrigger: {
                 trigger: cards[i + 1],
@@ -272,39 +234,32 @@ cards.forEach((card, i) => {
     }
 });
 
-// ------------------------------------
-// Open all view buttons in new tab to preserve portfolio scroll state
-// ------------------------------------
 document.querySelectorAll('.view-btn').forEach(btn => {
     btn.setAttribute('target', '_blank');
 });
 
-// ------------------------------------
-// 3D Glass Panel Hover Tilt Effect
-// ------------------------------------
 const glassPanels = document.querySelectorAll('.glass-panel');
 glassPanels.forEach(panel => {
     panel.addEventListener('mousemove', (e) => {
         const rect = panel.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
+
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-        
-        // Calculate max tilt of 10 degrees
+
         const rotateX = ((y - centerY) / centerY) * -10;
         const rotateY = ((x - centerX) / centerX) * 10;
-        
+
         gsap.to(panel, {
             rotationX: rotateX,
             rotationY: rotateY,
-            z: 20, // pop out slightly
+            z: 20,
             duration: 0.5,
             ease: 'power1.out'
         });
     });
-    
+
     panel.addEventListener('mouseleave', () => {
         gsap.to(panel, {
             rotationX: 0,
